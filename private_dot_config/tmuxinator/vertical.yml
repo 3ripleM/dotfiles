@@ -1,0 +1,11 @@
+name: example-vertical
+root: ~/projects/example
+windows:
+  - main:
+      layout: even-vertical
+      panes:
+        - nvim
+        - bundle exec rails s
+        - |
+          cd tmp && tail -f log/development.log
+        - htop

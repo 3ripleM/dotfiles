@@ -1,0 +1,12 @@
+name: example
+root: ~/projects/example
+windows:
+  - editor:
+      layout: tiled
+      panes:
+        - nvim
+        - bundle exec rails s
+        - |
+          cd tmp && tail -f log/development.log
+        - htop
+  - server: bundle exec rails s
