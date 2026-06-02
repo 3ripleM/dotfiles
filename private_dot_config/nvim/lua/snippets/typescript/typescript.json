@@ -1,0 +1,24 @@
+{
+  "commentish": {
+    "prefix": "ccc",
+    "body": [
+      "// -------------------------------------------------------------------------------------",
+      "// $1",
+      "// -------------------------------------------------------------------------------------"
+    ]
+  },
+  "nvsum": {
+    "prefix": "nvsum",
+    "body": [
+      "export interface $1 extends Tagged<'$1'> {}",
+      "export const $1: $1 = {_tag: '$1'}"
+    ]
+  },
+  "vsum": {
+    "prefix": "vsum",
+    "body": [
+      "export interface $1 extends Tagged<'$1'> {$2}",
+      "export const $1 = (spec: Untagged<$1>): $1 => ({...spec, _tag: '$1'})"
+    ]
+  }
+}

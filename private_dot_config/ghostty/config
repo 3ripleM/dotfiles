@@ -1,0 +1,6 @@
+# Ghostty config
+# Run `ghostty +show-config --default --docs` for all options
+
+font-size = 13
+window-padding-x = 4
+window-padding-y = 4

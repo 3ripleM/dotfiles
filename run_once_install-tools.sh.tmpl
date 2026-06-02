@@ -1,0 +1,62 @@
+#!/bin/bash
+# run_once_install-tools.sh.tmpl
+# chezmoi runs this exactly once per machine (tracked by content hash).
+# ~/Brewfile is applied by chezmoi before this script runs.
+set -e
+
+{{ if eq .chezmoi.os "darwin" -}}
+# ── macOS ──────────────────────────────────────────────────────────────────────
+
+if ! command -v brew &>/dev/null; then
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+brew tap nikitabobko/tap 2>/dev/null || true
+brew bundle install --file="$HOME/Brewfile" --no-lock
+
+{{ else if eq .chezmoi.os "linux" -}}
+# ── Linux (Debian/Ubuntu) ──────────────────────────────────────────────────────
+
+sudo apt-get update -qq
+sudo apt-get install -y git curl tmux fish ripgrep fd-find fzf lazygit ruby
+
+# Neovim: install latest AppImage
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
+rm nvim-linux-x86_64.tar.gz
+
+# uv
+command -v uv &>/dev/null || curl -LsSf https://astral.sh/uv/install.sh | sh
+
+{{- end }}
+
+# ── Both platforms ─────────────────────────────────────────────────────────────
+
+# TPM
+[ -d "$HOME/.tmux/plugins/tpm" ] || \
+  git clone --depth=1 https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+
+# catppuccin for tmux (manually installed, not via TPM)
+[ -d "$HOME/.tmux/plugins/catppuccin" ] || \
+  git clone --depth=1 https://github.com/catppuccin/tmux.git "$HOME/.tmux/plugins/catppuccin"
+
+# Fisher + plugins (reads ~/.config/fish/fish_plugins file applied by chezmoi)
+if command -v fish &>/dev/null; then
+  fish -c "
+    if not functions -q fisher
+      curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source
+    end
+    fisher update
+  "
+fi
+
+# Set fish as default shell
+FISH_PATH="$(command -v fish)"
+if [ -n "$FISH_PATH" ]; then
+  grep -qxF "$FISH_PATH" /etc/shells || echo "$FISH_PATH" | sudo tee -a /etc/shells
+  [ "$SHELL" = "$FISH_PATH" ] || chsh -s "$FISH_PATH"
+fi
+
+echo "✓ Bootstrap complete — open a new terminal"

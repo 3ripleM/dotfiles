@@ -1,0 +1,5 @@
+os:
+  editTemplate: "tmux new-window nvim -- {{filename}}"
+  editAtLineTemplate: "tmux new-window nvim +{{line}} -- {{filename}}"
+  editAtLineAndWaitTemplate: "tmux new-window nvim +{{line}} -- {{filename}}"
+  suspendOnEdit: false

@@ -1,0 +1,24 @@
+# Brewfile managed by chezmoi
+# Run: brew bundle install --file=Brewfile
+
+# Core CLI tools
+brew "neovim"
+brew "tmux"
+brew "fish"
+brew "git"
+brew "fzf"
+brew "ripgrep"
+brew "fd"
+brew "lazygit"
+
+# Language runtimes & tooling
+brew "ruby"
+brew "uv"          # Python version/package manager
+
+# macOS-only tools
+{{ if eq .chezmoi.os "darwin" -}}
+cask "zulu@17"     # Java 17 (Azul Zulu JDK)
+cask "orbstack"    # Docker/container runtime (macOS)
+cask "ghostty"     # Terminal emulator
+cask "aerospace"   # Tiling window manager
+{{- end }}

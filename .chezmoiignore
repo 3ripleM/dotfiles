@@ -1,0 +1,39 @@
+# chezmoi ignore patterns
+# Files matching these patterns are never managed by chezmoi.
+
+# macOS metadata
+.DS_Store
+**/.DS_Store
+
+# Vim/Neovim swap & backup files
+*.swp
+*.swo
+*~
+
+# Fish auto-generated files (plugins regenerate these on install)
+.config/fish/conf.d/_tide_init.fish
+.config/fish/conf.d/fish_frozen_key_bindings.fish
+.config/fish/conf.d/fish_frozen_theme.fish
+.config/fish/conf.d/gitnow.fish
+.config/fish/conf.d/nvm.fish
+.config/fish/conf.d/rustup.fish
+.config/fish/conf.d/swiftly.fish
+.config/fish/conf.d/uv.env.fish
+.config/fish/conf.d/dot_gitnow/
+.config/fish/fish_history
+.config/fish/fish_variables
+.config/fish/functions/fisher.fish
+.config/fish/functions/fish_prompt.fish
+.config/fish/functions/__gitnow_*.fish
+.config/fish/functions/_nvm_*.fish
+.config/fish/functions/_tide_*.fish
+.config/fish/functions/tide/
+
+# Neovim auto-generated
+.config/nvim/.swp
+.config/nvim/spell/*.add.spl
+.config/nvim/spell/*.sug
+
+# Machine-local (never commit)
+# Note: secrets.fish is managed via secrets.fish.tmpl — do NOT list it here
+.config/chezmoi/chezmoi.toml

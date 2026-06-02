@@ -1,0 +1,8 @@
+[data]
+  name  = "{{ promptString "Full name" }}"
+  email = "{{ promptString "Git email" }}"
+  work  = {{ promptBool "Work machine?" }}
+
+  # Secrets — stored locally only, never committed
+  googleSearchApiKey   = "{{ promptString "Google Search API key (leave blank if unused)" }}"
+  googleSearchEngineId = "{{ promptString "Google Search Engine ID (leave blank if unused)" }}"
