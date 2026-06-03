@@ -34,6 +34,18 @@ sh -c "$(curl -fsLS get.chezmoi.io)"
 chezmoi init --apply /path/to/this/repo
 ```
 
+If you want to skip package/tool installation and just apply dotfiles, use:
+
+```bash
+SKIP_INSTALL_TOOLS=1 chezmoi init --apply /path/to/this/repo
+```
+
+or after init:
+
+```bash
+SKIP_INSTALL_TOOLS=1 chezmoi apply
+```
+
 chezmoi will:
 1. Prompt for your name, email, and whether this is a work machine
 2. Prompt for any API keys you want injected into config

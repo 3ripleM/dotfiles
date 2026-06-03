@@ -4,6 +4,11 @@
 # ~/Brewfile is applied by chezmoi before this script runs.
 set -e
 
+if [ "${SKIP_INSTALL_TOOLS:-0}" = "1" ] || [ "${CHEZMOI_SKIP_INSTALL_TOOLS:-0}" = "1" ]; then
+  echo "✓ Skipping tool installation bootstrap (SKIP_INSTALL_TOOLS=1)"
+  exit 0
+fi
+
 failed_packages=()
 
 report_failed_packages() {
