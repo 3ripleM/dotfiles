@@ -30,14 +30,14 @@ macOS only: `zulu@17` · `orbstack` · `ghostty` · `aerospace`
 # 1. Install chezmoi
 sh -c "$(curl -fsLS get.chezmoi.io)"
 
-# 2. Apply dotfiles (replace with your repo URL once on GitHub)
-chezmoi init --apply /path/to/this/repo
+# 2. Apply dotfiles
+chezmoi init --apply https://github.com/3ripleM/dotfiles.git
 ```
 
 If you want to skip package/tool installation and just apply dotfiles, use:
 
 ```bash
-SKIP_INSTALL_TOOLS=1 chezmoi init --apply /path/to/this/repo
+SKIP_INSTALL_TOOLS=1 chezmoi init --apply https://github.com/3ripleM/dotfiles.git
 ```
 
 or after init:
