@@ -33,15 +33,31 @@ fi
 
 {{ else if eq .chezmoi.os "linux" -}}
 # ── Linux (Debian/Ubuntu) ──────────────────────────────────────────────────────
-
-sudo apt-add-repository ppa:fish-shell/release-4
-sudo apt-get update -qq
-packages=(git curl tmux fish ripgrep fd-find fzf lazygit ruby)
-for pkg in "${packages[@]}"; do
-  if ! sudo apt-get install -y "$pkg"; then
-    failed_packages+=("$pkg")
+if command -v apt-get >/dev/null 2>&1; then
+  if ! sudo apt-get update -qq; then
+    failed_packages+=("apt-get update")
   fi
- done
+  if ! sudo apt install software-properties-common -y; then
+    failed_packages+=("software-properties-common")
+  fi
+
+  if ! sudo apt-add-repository ppa:fish-shell/release-4; then
+    failed_packages+=("fish-shell PPA")
+  fi
+  if ! sudo apt-get update -qq; then
+    failed_packages+=("apt-get update")
+  fi
+
+  packages=(git curl tmux fish ripgrep fd-find fzf lazygit ruby)
+  for pkg in "${packages[@]}"; do
+    if ! sudo apt-get install -y "$pkg"; then
+      failed_packages+=("$pkg")
+    fi
+  done
+else
+  echo "⚠️  apt-get not found; skipping Debian/Ubuntu package install."
+  failed_packages+=(git curl tmux fish ripgrep fd-find fzf lazygit ruby)
+fi
 
 # Neovim: install latest AppImage
 if curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz; then
@@ -67,12 +83,26 @@ fi
 # ── Both platforms ─────────────────────────────────────────────────────────────
 
 # TPM
-[ -d "$HOME/.tmux/plugins/tpm" ] || \
-  git clone --depth=1 https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+if [ -d "$HOME/.tmux/plugins/tpm" ]; then
+  :
+elif command -v git >/dev/null 2>&1; then
+  if ! git clone --depth=1 https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"; then
+    failed_packages+=("tmux-plugins/tpm")
+  fi
+else
+  failed_packages+=("git (needed for tmux TPM clone)")
+fi
 
 # catppuccin for tmux (manually installed, not via TPM)
-[ -d "$HOME/.tmux/plugins/catppuccin" ] || \
-  git clone --depth=1 https://github.com/catppuccin/tmux.git "$HOME/.tmux/plugins/catppuccin"
+if [ -d "$HOME/.tmux/plugins/catppuccin" ]; then
+  :
+elif command -v git >/dev/null 2>&1; then
+  if ! git clone --depth=1 https://github.com/catppuccin/tmux.git "$HOME/.tmux/plugins/catppuccin"; then
+    failed_packages+=("catppuccin")
+  fi
+else
+  failed_packages+=("git (needed for catppuccin clone)")
+fi
 
 # Fisher + plugins (reads ~/.config/fish/fish_plugins file applied by chezmoi)
 if command -v fish &>/dev/null; then
