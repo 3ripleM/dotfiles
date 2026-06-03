@@ -34,6 +34,7 @@ fi
 {{ else if eq .chezmoi.os "linux" -}}
 # ── Linux (Debian/Ubuntu) ──────────────────────────────────────────────────────
 
+sudo apt-add-repository ppa:fish-shell/release-4
 sudo apt-get update -qq
 packages=(git curl tmux fish ripgrep fd-find fzf lazygit ruby)
 for pkg in "${packages[@]}"; do
