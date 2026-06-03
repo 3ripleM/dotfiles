@@ -4,6 +4,20 @@
 # ~/Brewfile is applied by chezmoi before this script runs.
 set -e
 
+failed_packages=()
+
+report_failed_packages() {
+  if [ "${#failed_packages[@]}" -ne 0 ]; then
+    echo
+    echo "⚠️  Some package installs failed:"
+    for pkg in "${failed_packages[@]}"; do
+      echo "  - $pkg"
+    done
+    echo
+    echo "Please install these manually and rerun this script or use chezmoi apply again."
+  fi
+}
+
 {{ if eq .chezmoi.os "darwin" -}}
 # ── macOS ──────────────────────────────────────────────────────────────────────
 
@@ -13,22 +27,39 @@ if ! command -v brew &>/dev/null; then
 fi
 
 brew tap nikitabobko/tap 2>/dev/null || true
-brew bundle install --file="$HOME/Brewfile" --no-lock
+if ! brew bundle install --file="$HOME/Brewfile" --no-lock; then
+  failed_packages+=("brew bundle packages")
+fi
 
 {{ else if eq .chezmoi.os "linux" -}}
 # ── Linux (Debian/Ubuntu) ──────────────────────────────────────────────────────
 
 sudo apt-get update -qq
-sudo apt-get install -y git curl tmux fish ripgrep fd-find fzf lazygit ruby
+packages=(git curl tmux fish ripgrep fd-find fzf lazygit ruby)
+for pkg in "${packages[@]}"; do
+  if ! sudo apt-get install -y "$pkg"; then
+    failed_packages+=("$pkg")
+  fi
+ done
 
 # Neovim: install latest AppImage
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
-sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
-rm nvim-linux-x86_64.tar.gz
+if curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz; then
+  if sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz; then
+    sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
+  else
+    failed_packages+=("neovim")
+  fi
+  rm -f nvim-linux-x86_64.tar.gz
+else
+  failed_packages+=("neovim")
+fi
 
 # uv
-command -v uv &>/dev/null || curl -LsSf https://astral.sh/uv/install.sh | sh
+if ! command -v uv &>/dev/null; then
+  if ! curl -LsSf https://astral.sh/uv/install.sh | sh; then
+    failed_packages+=("uv")
+  fi
+fi
 
 {{- end }}
 
@@ -59,4 +90,9 @@ if [ -n "$FISH_PATH" ]; then
   [ "$SHELL" = "$FISH_PATH" ] || chsh -s "$FISH_PATH"
 fi
 
-echo "✓ Bootstrap complete — open a new terminal"
+if [ "${#failed_packages[@]}" -ne 0 ]; then
+  report_failed_packages
+  echo "✓ Bootstrap completed with warnings — open a new terminal after installing missing packages."
+else
+  echo "✓ Bootstrap complete — open a new terminal"
+fi
