@@ -9,6 +9,7 @@ Personal dotfiles for macOS and Linux, managed with [chezmoi](https://chezmoi.io
 | **Neovim** | LazyVim-based setup, 38 plugins |
 | **Fish** | config, custom functions (`memory`, `watch`), tide prompt |
 | **Tmux** | catppuccin theme, TPM plugins |
+| **Herdr** | terminal workspace manager; C-h/j/k/l pane nav via herdr-splits |
 | **AeroSpace** | Tiling window manager (macOS only) |
 | **Ghostty** | Terminal emulator config |
 
@@ -18,7 +19,7 @@ Personal dotfiles for macOS and Linux, managed with [chezmoi](https://chezmoi.io
 - [gitnow](https://github.com/joseluisq/gitnow) — git shortcuts
 
 ### Brew packages
-`neovim` · `tmux` · `fish` · `git` · `fzf` · `ripgrep` · `fd` · `lazygit` · `ruby` · `uv`
+`neovim` · `tmux` · `fish` · `git` · `fzf` · `ripgrep` · `fd` · `lazygit` · `herdr` · `ruby` · `uv`
 
 macOS only: `zulu@17` · `orbstack` · `ghostty` · `aerospace`
 

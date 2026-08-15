@@ -1,0 +1,80 @@
+# Migrated from ~/.tmux.conf (2026-08-15).
+
+[theme]
+# tmux: catppuccin (mocha flavor, catppuccin.tmux plugin)
+name = "catppuccin"
+
+# tmux: pane-active-border-style "fg=#a6e3a1"
+[theme.custom]
+accent = "#a6e3a1"
+
+[ui]
+# tmux: mouse on
+mouse_capture = true
+
+show_agent_labels_on_pane_borders = true
+[keys]
+# tmux: prefix C-f
+prefix = "ctrl+f"
+
+# tmux: C-\ last pane
+last_pane = "ctrl+backslash"
+
+# tmux: vim-tmux-navigator C-h/j/k/l bare pane navigation.
+# Handled by the herdr-splits plugin: inside nvim the nvim-side plugin
+# grabs C-h/j/k/l (moving splits, falling back to herdr panes at an
+# edge); outside nvim the raw chords hit these herdr bindings.
+
+[[keys.command]]
+key = "ctrl+h"
+type = "plugin_action"
+command = "herdr-splits.nav-left"
+
+[[keys.command]]
+key = "ctrl+j"
+type = "plugin_action"
+command = "herdr-splits.nav-down"
+
+[[keys.command]]
+key = "ctrl+k"
+type = "plugin_action"
+command = "herdr-splits.nav-up"
+
+[[keys.command]]
+key = "ctrl+l"
+type = "plugin_action"
+command = "herdr-splits.nav-right"
+
+# Resizing in herdr panes, mirroring the plugin's M-h/j/k/l nvim maps
+[[keys.command]]
+key = "alt+h"
+type = "plugin_action"
+command = "herdr-splits.resize-left"
+
+[[keys.command]]
+key = "alt+j"
+type = "plugin_action"
+command = "herdr-splits.resize-down"
+
+[[keys.command]]
+key = "alt+k"
+type = "plugin_action"
+command = "herdr-splits.resize-up"
+
+[[keys.command]]
+key = "alt+l"
+type = "plugin_action"
+command = "herdr-splits.resize-right"
+
+# tmux: tmux-floax 'p' (floating window manager). No direct equivalent;
+# if you want a popup-style quick command, uncomment and adapt:
+# [[keys.command]]
+# key = "prefix+p"
+# type = "popup"
+# command = "lazygit"
+# width = "80%"
+# height = "80%"
+
+# tmux: @catppuccin status modules
+[ui.toast]
+delivery = "system"

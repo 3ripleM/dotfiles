@@ -109,6 +109,21 @@ else
   failed_packages+=("git (needed for catppuccin clone)")
 fi
 
+# Herdr (terminal workspace manager) + herdr-splits plugin
+if command -v herdr >/dev/null 2>&1; then
+  :
+elif ! curl -fsSL https://herdr.dev/install.sh | sh; then
+  failed_packages+=("herdr")
+fi
+
+if command -v herdr >/dev/null 2>&1; then
+  if herdr plugin list 2>/dev/null | grep -q herdr-splits; then
+    :
+  elif ! herdr plugin install lmilojevicc/herdr-splits.nvim --yes; then
+    failed_packages+=("herdr plugin herdr-splits")
+  fi
+fi
+
 # Fisher + plugins (reads ~/.config/fish/fish_plugins file applied by chezmoi)
 if command -v fish &>/dev/null; then
   fish -c "

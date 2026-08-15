@@ -1,6 +1,7 @@
 return {
   {
     "alexghergh/nvim-tmux-navigation",
+    cond = vim.env.HERDR_ENV ~= "1",
     keys = {
       {
         "<C-h>",
